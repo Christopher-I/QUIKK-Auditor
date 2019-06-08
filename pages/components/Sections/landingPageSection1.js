@@ -1,51 +1,21 @@
 import React from 'react';
-import { Button,Segment, Form, TextArea} from 'semantic-ui-react';
-// import Web3 from '../../../Ethereum/web3';
+import { Button,Segment, Form, TextArea, Progress,Message} from 'semantic-ui-react';
 
 
 class landingPageSection1 extends React.Component{
 
 constructor(props) {
     super(props);
-
 	this.state = {
-		contract:''
+		contractCode:'',
 	}
-
-	this.handleChange = this.handleChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
 }
 
 
-	onSubmit  (){
-
-		var x = this.state.contract.split("\n");
-		var source = this.state.contract;
-
-		BrowserSolc.getVersions(function(soljsonSources, soljsonReleases) {
-		  console.log(soljsonSources);
-		  //console.log(soljsonReleases);
-		});
-
-		//Load a specific compiler version
-		BrowserSolc.loadVersion("soljson-v0.4.24+commit.e67f0147.js", function(compiler) {
-		  		// var source = "" + 
-				  //  "contract test {\n" +
-				  //  "   function multiply(uint a) returns(uint d) {\n" +
-				  //  "       return a * 7;\n" +
-				  //  "   }\n" +
-				  //  "}\n";
-		
-		  let optimize = 1;
-		  let result = compiler.compile(source, optimize);
-		  console.log(result);
-		});
-
-
-	}
-
-	handleChange(event){
-
+//when smart contract code changes update the state of the parent
+	handleChangesToContract=(event)=>{
+		this.props.removeErrorMessage(); 
+		this.props.storeContractCodeToState(event.target.value);
 		this.setState({
 			contract:event.target.value
 		});
@@ -57,13 +27,15 @@ constructor(props) {
 	return (
 		<Segment style = {{height:'850px'}}>
 			<h1> QUIKK Smart Contract Auditor</h1> 
-
-
 			 <p style ={{color:'grey'}}> light, open-source smart contract auditor for ethereum</p>
+			 <Form error= {!!this.props.errorMessage} success={!!this.props.successMessage}>
+			<Progress percent={this.props.percent} autoSuccess />
+			<Message error header = "Error" content = {this.props.errorMessage}/>
+			<Message success header = "Success!" content = {this.props.successMessage}/>
 
-			 <Form >
-			 <TextArea value= {this.state.contract} onChange={this.handleChange} style ={{height:'700px'}} placeholder="Paste your smart contract code here..."/>
-			 <Button primary floated = "right" style ={{marginTop:'10px'}} onClick ={this.onSubmit} >Run Audit</Button>
+
+			 
+			 <TextArea value= {this.state.contract} onChange={this.handleChangesToContract} style ={{maxHeight:'680px',minHeight:'680px'}} placeholder="Paste your smart contract code here..."/>
 			 </Form>
 		 </Segment>
 		)

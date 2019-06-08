@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -536,10 +536,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_corejs2_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/getPrototypeOf */ "./node_modules/@babel/runtime-corejs2/helpers/esm/getPrototypeOf.js");
 /* harmony import */ var _babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/assertThisInitialized */ "./node_modules/@babel/runtime-corejs2/helpers/esm/assertThisInitialized.js");
 /* harmony import */ var _babel_runtime_corejs2_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/inherits */ "./node_modules/@babel/runtime-corejs2/helpers/esm/inherits.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! semantic-ui-react */ "semantic-ui-react");
-/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(semantic_ui_react__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/defineProperty */ "./node_modules/@babel/runtime-corejs2/helpers/esm/defineProperty.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! semantic-ui-react */ "semantic-ui-react");
+/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__);
+
 
 
 
@@ -548,7 +550,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var _jsxFileName = "/Users/chris/Documents/BlockchainProjects/hackathon/auditorFrontEnd/pages/components/Sections/landingPageSection1.js";
 
- // import Web3 from '../../../Ethereum/web3';
+
 
 var landingPageSection1 =
 /*#__PURE__*/
@@ -561,105 +563,104 @@ function (_React$Component) {
     Object(_babel_runtime_corejs2_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, landingPageSection1);
 
     _this = Object(_babel_runtime_corejs2_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__["default"])(this, Object(_babel_runtime_corejs2_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(landingPageSection1).call(this, props));
-    _this.state = {
-      contract: ''
-    };
-    _this.handleChange = _this.handleChange.bind(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
-    _this.onSubmit = _this.onSubmit.bind(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
-    return _this;
-  }
 
-  Object(_babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(landingPageSection1, [{
-    key: "onSubmit",
-    value: function onSubmit() {
-      var x = this.state.contract.split("\n");
-      var source = this.state.contract;
-      BrowserSolc.getVersions(function (soljsonSources, soljsonReleases) {
-        console.log(soljsonSources); //console.log(soljsonReleases);
-      }); //Load a specific compiler version
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "handleChangesToContract", function (event) {
+      _this.props.removeErrorMessage();
 
-      BrowserSolc.loadVersion("soljson-v0.4.24+commit.e67f0147.js", function (compiler) {
-        // var source = "" + 
-        //  "contract test {\n" +
-        //  "   function multiply(uint a) returns(uint d) {\n" +
-        //  "       return a * 7;\n" +
-        //  "   }\n" +
-        //  "}\n";
-        var optimize = 1;
-        var result = compiler.compile(source, optimize);
-        console.log(result);
-      });
-    }
-  }, {
-    key: "handleChange",
-    value: function handleChange(event) {
-      this.setState({
+      _this.props.storeContractCodeToState(event.target.value);
+
+      _this.setState({
         contract: event.target.value
       });
-    }
-  }, {
+    });
+
+    _this.state = {
+      contractCode: ''
+    };
+    return _this;
+  } //when smart contract code changes update the state of the parent
+
+
+  Object(_babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(landingPageSection1, [{
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_7__["Segment"], {
+      return react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Segment"], {
         style: {
           height: '850px'
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 58
+          lineNumber: 28
         },
         __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement("h1", {
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("h1", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 59
+          lineNumber: 29
         },
         __self: this
-      }, " QUIKK Smart Contract Auditor"), react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement("p", {
+      }, " QUIKK Smart Contract Auditor"), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("p", {
         style: {
           color: 'grey'
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 62
+          lineNumber: 30
         },
         __self: this
-      }, " light, open-source smart contract auditor for ethereum"), react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_7__["Form"], {
+      }, " light, open-source smart contract auditor for ethereum"), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Form"], {
+        error: !!this.props.errorMessage,
+        success: !!this.props.successMessage,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 64
+          lineNumber: 31
         },
         __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_7__["TextArea"], {
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Progress"], {
+        percent: this.props.percent,
+        autoSuccess: true,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 32
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Message"], {
+        error: true,
+        header: "Error",
+        content: this.props.errorMessage,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 33
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Message"], {
+        success: true,
+        header: "Success!",
+        content: this.props.successMessage,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 34
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["TextArea"], {
         value: this.state.contract,
-        onChange: this.handleChange,
+        onChange: this.handleChangesToContract,
         style: {
-          height: '700px'
+          maxHeight: '680px',
+          minHeight: '680px'
         },
         placeholder: "Paste your smart contract code here...",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 65
+          lineNumber: 38
         },
         __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_7__["Button"], {
-        primary: true,
-        floated: "right",
-        style: {
-          marginTop: '10px'
-        },
-        onClick: this.onSubmit,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 66
-        },
-        __self: this
-      }, "Run Audit")));
+      })));
     }
   }]);
 
   return landingPageSection1;
-}(react__WEBPACK_IMPORTED_MODULE_6___default.a.Component);
+}(react__WEBPACK_IMPORTED_MODULE_7___default.a.Component);
 
 /* harmony default export */ __webpack_exports__["default"] = (landingPageSection1);
 
@@ -714,66 +715,71 @@ function (_React$Component) {
 
     _this = Object(_babel_runtime_corejs2_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__["default"])(this, (_getPrototypeOf2 = Object(_babel_runtime_corejs2_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(landingPageSection2)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
-    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "state", {
-      fileSize: '1',
-      vunerabiltiesFound: '4',
-      noOfLines: '200',
-      contract: '',
-      timeOfAudit: ''
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "selectCompiler", function (event) {
+      //set compiler in parent component
+      _this.props.selectCompiler(event.target.innerText);
+
+      _this.props.removeErrorMessage();
     });
 
     return _this;
   }
 
   Object(_babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(landingPageSection2, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var today = new Date();
-      var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-      var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-      var dateTime = date + ' ' + time;
-      this.setState({
-        timeOfAudit: dateTime
-      });
-    }
-  }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       return react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Segment"], {
         style: {
           height: '850px'
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 31
+          lineNumber: 17
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Button"], {
         primary: true,
         style: {
-          width: '250px'
+          width: '255px'
         },
+        onClick: this.props.onSubmit,
+        loading: this.props.loading,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 32
+          lineNumber: 18
         },
         __self: this
       }, "Run Audit"), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 33
+          lineNumber: 19
         },
         __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("h4", {
+      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 35
+          lineNumber: 20
         },
         __self: this
-      }, " Result"), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Segment"], {
+      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Dropdown"], {
+        placeholder: "Select Compiler",
+        fluid: true,
+        selection: true,
+        onChange: function onChange() {
+          return _this2.selectCompiler(event);
+        },
+        options: listOfCompilers,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 36
+          lineNumber: 21
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Segment"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 29
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
@@ -782,19 +788,19 @@ function (_React$Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 37
+          lineNumber: 30
         },
         __self: this
       }, " Time of Audit: "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 38
+          lineNumber: 31
         },
         __self: this
-      }, " ", this.state.timeOfAudit, "  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
+      }, " ", this.props.timeOfAudit, "  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 39
+          lineNumber: 32
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
@@ -803,63 +809,97 @@ function (_React$Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 40
+          lineNumber: 33
         },
         __self: this
       }, " Vunerabilties Found:  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
         __source: {
           fileName: _jsxFileName,
+          lineNumber: 34
+        },
+        __self: this
+      }, " ", this.props.vunerabiltiesFound, "  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 35
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
+        style: {
+          color: 'grey'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 36
+        },
+        __self: this
+      }, " Warnings:  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 37
+        },
+        __self: this
+      }, " ", this.props.vunerabiltiesFound, "  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 38
+        },
+        __self: this
+      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
+        style: {
+          color: 'grey'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 39
+        },
+        __self: this
+      }, " Estimated Gas Cost: "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 40
+        },
+        __self: this
+      }, " ", this.props.gasEstimate, "  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
+        __source: {
+          fileName: _jsxFileName,
           lineNumber: 41
         },
         __self: this
-      }, " ", this.state.vunerabiltiesFound, "  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
+      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
+        style: {
+          color: 'grey'
+        },
         __source: {
           fileName: _jsxFileName,
           lineNumber: 42
         },
         __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
-        style: {
-          color: 'grey'
-        },
+      }, " Lines of Code: "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
         __source: {
           fileName: _jsxFileName,
           lineNumber: 43
         },
         __self: this
-      }, " File Size: "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 44
-        },
-        __self: this
-      }, " ", this.state.fileSize, "  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 45
-        },
-        __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
-        style: {
-          color: 'grey'
-        },
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 46
-        },
-        __self: this
-      }, " Lines of Code: "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 47
-        },
-        __self: this
-      }, " ", this.state.noOfLines, "  ")));
+      }, " ", this.props.noOfLines, "  ")));
     }
   }]);
 
   return landingPageSection2;
-}(react__WEBPACK_IMPORTED_MODULE_7___default.a.Component);
+}(react__WEBPACK_IMPORTED_MODULE_7___default.a.Component); //list of all compilers arranged in object form according to the imported semantic UI requirements for the dropw down menu
+
+
+var listOfCompilers = [{
+  text: "soljson-v0.4.24+commit.e67f0147.js",
+  value: "soljson-v0.4.24+commit.e67f0147.js"
+}, {
+  text: "soljson-v0.4.26+commit.4563c3fc.js",
+  value: "soljson-v0.4.26+commit.4563c3fc.js"
+}]; // {text:"soljson-v0.5.0+commit.1d4f565a.js", value:"soljson-v0.5.0+commit.1d4f565a.js"},
+// {text:"soljson-v0.5.5+commit.47a71e8f.js", value:"soljson-v0.5.5+commit.47a71e8f.js"},
+// {text:"soljson-v0.5.9+commit.e560f70d.js", value:"soljson-v0.5.9+commit.e560f70d.js"},
+// text:"soljson-v0.3.1+commit.c492d9b.js", value:"soljson-v0.3.1+commit.c492d9b.js"},
+// {text:"soljson-v0.3.6+commit.3fc68da.js", value:"soljson-v0.3.6+commit.3fc68da.js"}
 
 /* harmony default export */ __webpack_exports__["default"] = (landingPageSection2);
 
@@ -878,16 +918,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/createClass */ "./node_modules/@babel/runtime-corejs2/helpers/esm/createClass.js");
 /* harmony import */ var _babel_runtime_corejs2_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/possibleConstructorReturn */ "./node_modules/@babel/runtime-corejs2/helpers/esm/possibleConstructorReturn.js");
 /* harmony import */ var _babel_runtime_corejs2_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/getPrototypeOf */ "./node_modules/@babel/runtime-corejs2/helpers/esm/getPrototypeOf.js");
-/* harmony import */ var _babel_runtime_corejs2_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/inherits */ "./node_modules/@babel/runtime-corejs2/helpers/esm/inherits.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! semantic-ui-react */ "semantic-ui-react");
-/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(semantic_ui_react__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! next/head */ "next/head");
-/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(next_head__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Header */ "./pages/components/Header.js");
-/* harmony import */ var _Sections_landingPageSection1__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Sections/landingPageSection1 */ "./pages/components/Sections/landingPageSection1.js");
-/* harmony import */ var _Sections_landingPageSection2__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Sections/landingPageSection2 */ "./pages/components/Sections/landingPageSection2.js");
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/assertThisInitialized */ "./node_modules/@babel/runtime-corejs2/helpers/esm/assertThisInitialized.js");
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/inherits */ "./node_modules/@babel/runtime-corejs2/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/defineProperty */ "./node_modules/@babel/runtime-corejs2/helpers/esm/defineProperty.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! semantic-ui-react */ "semantic-ui-react");
+/* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! next/head */ "next/head");
+/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(next_head__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Header */ "./pages/components/Header.js");
+/* harmony import */ var _Sections_landingPageSection1__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Sections/landingPageSection1 */ "./pages/components/Sections/landingPageSection1.js");
+/* harmony import */ var _Sections_landingPageSection2__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Sections/landingPageSection2 */ "./pages/components/Sections/landingPageSection2.js");
+
+
 
 
 
@@ -904,68 +948,195 @@ var _jsxFileName = "/Users/chris/Documents/BlockchainProjects/hackathon/auditorF
 var landingPage =
 /*#__PURE__*/
 function (_React$Component) {
-  Object(_babel_runtime_corejs2_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(landingPage, _React$Component);
+  Object(_babel_runtime_corejs2_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_5__["default"])(landingPage, _React$Component);
 
   function landingPage() {
+    var _getPrototypeOf2;
+
+    var _this;
+
     Object(_babel_runtime_corejs2_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, landingPage);
 
-    return Object(_babel_runtime_corejs2_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__["default"])(this, Object(_babel_runtime_corejs2_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(landingPage).apply(this, arguments));
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = Object(_babel_runtime_corejs2_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__["default"])(this, (_getPrototypeOf2 = Object(_babel_runtime_corejs2_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(landingPage)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "state", {
+      currentCompiler: '',
+      contractCode: '',
+      creationCost: '',
+      executionCost: '',
+      gasEstimate: '',
+      timeOfAudit: '',
+      fileSize: '',
+      vunerabiltiesFound: '',
+      noOfLines: '',
+      percent: '',
+      errorMessage: '',
+      successMessage: '',
+      loading: false //get Time of Audit
+
+    });
+
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "setTimeOfAudit", function () {
+      var today = new Date();
+      var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+      var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      var dateTime = date + ' ' + time;
+
+      _this.setState({
+        timeOfAudit: dateTime
+      });
+    });
+
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "selectCompiler", function (compiler) {
+      _this.setState({
+        currentCompiler: compiler
+      });
+    });
+
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "storeContractCodeToState", function (contractCode) {
+      _this.setState({
+        contractCode: contractCode
+      });
+    });
+
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "removeErrorMessage", function () {
+      _this.setState({
+        errorMessage: '',
+        successMessage: '',
+        percent: '0'
+      });
+    });
+
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "onSubmit", function () {
+      if (_this.state.currentCompiler) {
+        _this.setTimeOfAudit();
+
+        var self = Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this);
+
+        _this.setState({
+          loading: true,
+          errorMessage: '',
+          successMessage: ''
+        });
+
+        var source = _this.state.contractCode;
+
+        var dataArray = _this.state.contractCode.split("\n"); //printlist of available compilers
+        // BrowserSolc.getVersions(function(soljsonSources, soljsonReleases) {
+        //   //console.log(soljsonSources);
+        //   //console.log(soljsonReleases);
+        // });
+        //Load a specific compiler version
+
+
+        BrowserSolc.loadVersion.bind(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this))(_this.state.currentCompiler, function (compiler) {
+          var optimize = 1;
+          var result = compiler.compile(source, optimize);
+          var totalGasCost = result.contracts[":Migrations"].gasEstimates.creation[0] + result.contracts[":Migrations"].gasEstimates.creation[1];
+
+          if (result.errors) {
+            self.setState({
+              errorMessage: result.errors[0]
+            });
+          } else {
+            self.setState({
+              noOfLines: dataArray.length,
+              creationCost: result.contracts[":Migrations"].gasEstimates.creation[0],
+              executionCost: result.contracts[":Migrations"].gasEstimates.creation[1],
+              gasEstimate: totalGasCost,
+              percent: 100,
+              successMessage: "Audit Complete!"
+            });
+          }
+
+          console.log(result.contracts[":Migrations"].gasEstimates.creation);
+        });
+      } else {
+        _this.setState({
+          errorMessage: "Please select a compiler"
+        });
+      }
+
+      _this.setState({
+        loading: false
+      });
+    });
+
+    return _this;
   }
 
   Object(_babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(landingPage, [{
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_6__["Container"], {
+      return react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Container"], {
         style: {
           width: '1230px'
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 13
+          lineNumber: 123
         },
         __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_Header__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_Header__WEBPACK_IMPORTED_MODULE_10__["default"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 14
+          lineNumber: 124
         },
         __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_6__["Grid"], {
+      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Grid"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 15
+          lineNumber: 125
         },
         __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_6__["Grid"].Row, {
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Grid"].Row, {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 16
+          lineNumber: 126
         },
         __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_6__["Grid"].Column, {
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Grid"].Column, {
         width: 12,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 18
+          lineNumber: 128
         },
         __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_Sections_landingPageSection1__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_Sections_landingPageSection1__WEBPACK_IMPORTED_MODULE_11__["default"], {
+        removeErrorMessage: this.removeErrorMessage,
+        loading: this.state.loading,
+        successMessage: this.state.successMessage,
+        errorMessage: this.state.errorMessage,
+        percent: this.state.percent,
+        storeContractCodeToState: this.storeContractCodeToState,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 19
+          lineNumber: 129
         },
         __self: this
-      })), react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_6__["Grid"].Column, {
+      })), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Grid"].Column, {
         width: 4,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 23
+          lineNumber: 140
         },
         __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_Sections_landingPageSection2__WEBPACK_IMPORTED_MODULE_10__["default"], {
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_Sections_landingPageSection2__WEBPACK_IMPORTED_MODULE_12__["default"], {
+        gasEstimate: this.state.gasEstimate,
+        removeErrorMessage: this.removeErrorMessage,
+        loading: this.state.loading,
+        noOfLines: this.state.noOfLines,
+        timeOfAudit: this.state.timeOfAudit,
+        vunerabiltiesFound: this.state.vunerabiltiesFound,
+        onSubmit: this.onSubmit,
+        selectCompiler: this.selectCompiler,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 24
+          lineNumber: 141
         },
         __self: this
       })))));
@@ -973,13 +1144,13 @@ function (_React$Component) {
   }]);
 
   return landingPage;
-}(react__WEBPACK_IMPORTED_MODULE_5___default.a.Component);
+}(react__WEBPACK_IMPORTED_MODULE_7___default.a.Component);
 
 /* harmony default export */ __webpack_exports__["default"] = (landingPage);
 
 /***/ }),
 
-/***/ 5:
+/***/ 3:
 /*!****************************!*\
   !*** multi ./pages/app.js ***!
   \****************************/
