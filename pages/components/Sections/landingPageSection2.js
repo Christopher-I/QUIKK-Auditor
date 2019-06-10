@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Card, TextArea, Button,Dropdown} from 'semantic-ui-react';
+import { Segment, Card, TextArea, Button,Dropdown,List,Grid} from 'semantic-ui-react';
 
 
 class landingPageSection2 extends React.Component{
@@ -11,10 +11,11 @@ class landingPageSection2 extends React.Component{
 	}
 
 
+
 	render(){
 		return (
 
-				<Segment style = {{height:'850px'}}>
+				<Segment style = {{height:'850px',overflow: 'scroll'}}>
 				 	<Button primary style = {{width : '255px'}} onClick={this.props.onSubmit} loading = {this.props.loading}>Run Audit</Button>
 				 	<br/>
 				 	<br/>
@@ -26,22 +27,28 @@ class landingPageSection2 extends React.Component{
 					    options={listOfCompilers}
 				  	/>
 
-				 	<Segment>
+
+				  	<h4>General Stats</h4>
+					<Segment>
 					 	<label style = {{color:'grey'}}> Time of Audit: </label>
 					 	<label > { this.props.timeOfAudit }  </label> 
 					 	<br/>
-					 	<label style = {{color:'grey'}}> Vunerabilties Found:  </label> 
-					 	<label > { this.props.vunerabiltiesFound }  </label> 
-					 	<br/>
 					 	<label style = {{color:'grey'}}> Warnings:  </label> 
-					 	<label > { this.props.vunerabiltiesFound }  </label> 
+					 	<label > { this.props.warningsList }  </label> 
 					 	<br/>
 					 	<label style = {{color:'grey'}}> Estimated Gas Cost: </label>
 					 	<label > { this.props.gasEstimate }  </label> 
 					 	<br/>
-					 	<label style = {{color:'grey'}}> Lines of Code: </label>
+					 	<label style = {{color:'grey'}}> Approx Lines of Code: </label>
 					 	<label > { this.props.noOfLines }  </label> 
 
+				 	</Segment>
+
+				 	<h4 style={{color:'#FF9933'}}>Warnings</h4>
+				 	<Segment>
+				 	<List divided relaxed>
+				 	{this.props.renderedList}
+				 	</List>
 				 	</Segment>
 				 
 

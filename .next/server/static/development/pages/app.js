@@ -460,6 +460,303 @@ function (_React$Component) {
 
 /***/ }),
 
+/***/ "./pages/auditor/Auditor.js":
+/*!**********************************!*\
+  !*** ./pages/auditor/Auditor.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (function (dataArray) {
+  //let dataArray = contractCode.split("\n");
+  var actionLines = new Array();
+  var warn = {
+    key: "Fiat",
+    warn: "500"
+  };
+  var warnings = [];
+  var searchFunction = 'function'; // we are looking for a line, contains, key word 'user1' in the file
+
+  var searchExternalCall = '.call()';
+  var dangerousCalls1 = '.call.value()';
+  var searchCurlyBrace = '()';
+  var lastIndex = -1; // let say, we have not found the keyword
+
+  var key;
+  var laws = 0;
+  var EIPE20Check = 0;
+
+  for (var index = 0; index < dataArray.length; index++) {
+    //Store action Lines
+    // Audit payable transaction restrictions
+    if (dataArray[index].includes(searchFunction) && dataArray[index].includes('(') || dataArray[index].includes('contract') && dataArray[index].includes('{') || dataArray[index].includes('constructor') && dataArray[index].includes('(')) {
+      //find function calls
+      actionLines.push(index);
+    }
+
+    ; // Audit payable transaction restrictions
+
+    if (dataArray[index].includes(searchFunction) && dataArray[index].includes('(')) {
+      //find function calls
+      if (dataArray[index].includes('payable')) {
+        //check if contract is payable
+        if (!dataArray[index].includes('internal') && !dataArray[index].includes('restricted')) {
+          //check if contract is payable 
+          warn = {
+            key: index + 1,
+            value: "Use caution when making external calls on payable function, ensure you mark trusted contracts/address. "
+          };
+          warnings.push(warn);
+        }
+      }
+    } //Audting state changes after external calls
+
+
+    if (dataArray[index].includes(searchExternalCall)) {
+      //find external calls
+      warn = {
+        key: index + 1,
+        value: "Avoid state changes after external calls."
+      };
+      warnings.push(warn);
+    } //Be aware of the tradeoffs between send(), transfer(), and call.value()()
+
+
+    if (dataArray[index].includes(dangerousCalls1)) {
+      //find external calls
+      warn = {
+        key: index + 1,
+        value: "Be aware that using '.call.value()', it is susceptible to re-entry attacks, if possible use send() or transfer(). Also do not forget to set your new account balance before the transfer "
+      };
+      warnings.push(warn);
+    } //Handle errors in external calls
+
+
+    if (dataArray[index].includes('.callcode(') || dataArray[index].includes('.call(') || dataArray[index].includes('call(') || dataArray[index].includes('.delegatecall(') || dataArray[index].includes('.send(')) {
+      //find external calls
+      if (!dataArray[index].includes('if')) {
+        warn = {
+          key: index + 1,
+          value: "Handle errors in external calls warning: make sure to handle the possibility that the call will fail, by checking the return value."
+        };
+        warnings.push(warn);
+      }
+    } // Favor pull over push for external calls
+
+
+    if (dataArray[index].includes(searchFunction) && dataArray[index].includes('(')) {
+      //find function calls
+      if (dataArray[index].includes('payable')) {
+        //check if contract is payable
+        if (dataArray[index].includes('internal') || !dataArray[index].includes('external')) {
+          //check if contract is payable 
+          warn = {
+            key: index + 1,
+            value: "Favor pull over push for external calls.External/Internal Calls can fail accidentally or deliberately. To minimize the damage caused by such failures, it is often better to set up manaul transfers rather than automate them. This is especially relevant for payments, where it is better to let users withdraw funds rather than push funds to them automatically. (This also reduces the chance of problems with the gas limit.)"
+          };
+          warnings.push(warn);
+        }
+      }
+    }
+
+    ; //Don't delegatecall to untrusted code
+
+    if (dataArray[index].includes('.delegatecall') && dataArray[index].includes('(')) {
+      //find external calls 
+      warn = {
+        key: index + 1,
+        value: "Ensure that the address being used in this delegate call is a trusted address and cannot be changed or supplied by a user, as the result can alter the state of your contract "
+      };
+      warnings.push(warn);
+    } //Audit function visibility 
+
+
+    if (dataArray[index].includes(searchFunction) && dataArray[index].includes('(') && !dataArray[index].includes('internal') && !dataArray[index].includes('external') && !dataArray[index].includes('private') && !dataArray[index].includes('public')) {
+      warn = {
+        key: index + 1,
+        value: "Explicitly label the visibility of functions and state variables. Functions can be specified as being external, public, internal or private. "
+      };
+      warnings.push(warn);
+    } //Lock Pragma on specific solidity version
+
+
+    if (dataArray[index].includes('pragma solidity') && (dataArray[index].includes('>') || dataArray[index].includes('<'))) {
+      //find external calls
+      warnings.push({
+        key: index + 1,
+        value: "Lock pragmas to specific compiler version. Locking the pragma helps ensure that contracts do not accidentally get deployed using, for example, the latest compiler which may have higher risks of undiscovered bugs."
+      });
+    } //Avoid using tx.origin
+
+
+    if (dataArray[index].includes('tx.origin')) {
+      //find external calls
+      warn = {
+        key: index + 1,
+        value: "Avoid using tx.origin as it is unsafe, we recommend you should use msg.sender for authorization."
+      };
+      warnings.push(warn);
+    }
+
+    if (dataArray[index].includes('block.timestamp')) {
+      //find external calls
+      warn = {
+        key: index + 1,
+        value: "Be aware that the timestamp of the block maybe inaccurate as it can be manipulated by a miner and other factors."
+      };
+      warnings.push(warn);
+    }
+
+    if (dataArray[index].includes('block.number')) {
+      //find external calls  
+      warn = {
+        key: index + 1,
+        value: "It is possible to estimate a time delta using the block.number property and average block time, however this is not future proof as block times may change."
+      };
+      warnings.push(warn);
+    } //Use interface type instead of the address for type safety
+
+
+    if (dataArray[index].includes(searchFunction) && dataArray[index].includes('(') && dataArray[index].includes('address')) {
+      //find function calls
+      warn = {
+        key: index + 1,
+        value: "When a function takes a contract address as an argument, it is better to pass an interface or contract type rather than raw address. If the function is called elsewhere within the source code, the compiler it will provide additional type safety guarantees "
+      };
+      warnings.push(warn);
+    }
+
+    if (dataArray[index].includes('extcodesize')) {
+      //find external calls
+      warn = {
+        key: index + 1,
+        value: "Avoid using extcodesize to check for Externally Owned Accounts."
+      };
+      warnings.push(warn);
+    }
+
+    if (dataArray[index].includes('EIP-20') || dataArray[index].includes('approve(')) {
+      EIPE20Check++;
+
+      if (EIPE20Check >= 2) {
+        warn = {
+          key: index + 1,
+          value: "The EIP-20 token's approve() function creates the potential for an approved spender to spend more than the intended amount. A front running attack can be used, enabling an approved spender to call transferFrom() both before and after the call to approve() is processed."
+        };
+        warnings.push(warn);
+      }
+    } //Prevent transferring tokens to the 0x0 address
+
+
+    if (dataArray[index].includes(searchFunction) && dataArray[index].includes('(') && (dataArray[index].includes('transferFrom') || dataArray[index].includes('transfer'))) {
+      //find function calls
+      warn = {
+        key: index + 1,
+        value: "Prevent transferring tokens to the 0x0 address and prevent transferring tokens to the same contract address. -" + "After your function declaration, you could the modifier:" + "modifier validDestination( address to ) {" + "require(to != address(0x0));" + "require(to != address(this) );" + "};" + " line "
+      };
+      warnings.push(warn);
+    } //Safemath preventions
+
+
+    if (dataArray[index].includes('uint256') && dataArray[index].includes('=') && (dataArray[index].includes('*') || dataArray[index].includes('-') || dataArray[index].includes('+') || dataArray[index].includes('/'))) {
+      //find external calls
+      warn = {
+        key: index + 1,
+        value: "Be aware that doing math functions on uint256 can cause overflows and underflows. We recommend you implement OpenZeppelin SafeMath"
+      };
+      warnings.push(warn);
+    } //Prevent transferring tokens to the 0x0 address
+
+
+    if (dataArray[index].includes(searchFunction) && dataArray[index].includes('(') && (dataArray[index].includes('transferFrom') || dataArray[index].includes('transfer') || dataArray[index].includes('withdraw')) && !dataArray[index].includes('onlyPayloadSize')) {
+      //find function calls
+      warn = {
+        key: index + 1,
+        value: "Prevent Short address attack by by introducing onlyPayloadSize modifier"
+      };
+      warnings.push(warn);
+    }
+  }
+
+  var transferCount = 0;
+  var setRequireStatementForIndividualBalanceNotZeroValve = false;
+  var setRequireStatementForAccountBalanceValve = false;
+  var setAccountBalanceValve = false;
+
+  for (var k = 0; k < actionLines.length; k++) {
+    for (var i = actionLines[k]; i < actionLines[k + 1]; i++) {
+      //Audit for multiple transfers within 1 function
+      if (dataArray[i].includes('.transfer(') || dataArray[i].includes('.send(') || dataArray[i].includes('.call.value(')) {
+        transferCount++;
+
+        if (transferCount >= 2) {
+          warn = {
+            key: i + 1,
+            value: "Avoid multiple transfers within a single function. line"
+          };
+          warnings.push(warn);
+        }
+      } //check if there is require statement for individuals balance
+
+
+      if (dataArray[i].includes('require(') && dataArray[i].includes('=') && dataArray[i].includes('!')) {
+        setRequireStatementForIndividualBalanceNotZeroValve = true;
+      } //check if there is require statement that sets smart contract account balance to 0
+
+
+      if (dataArray[i].includes('require(') && dataArray[i].includes('this.balance')) {
+        setRequireStatementForAccountBalanceValve = true;
+      } //check if users account balance has been set to zero
+
+
+      if (dataArray[i].includes('=') && dataArray[i].includes('0')) {
+        setAccountBalanceValve = true;
+      } //Audting for using .send()
+
+
+      if (dataArray[i].includes('.send(')) {
+        if (!setRequireStatementForIndividualBalanceNotZeroValve) {
+          warn = {
+            key: i + 1,
+            value: "Be aware of rerentrancy attack. Before withdraw or transfers, use a require statement to ensure user has available fund. Example require(UserBalance != 0)"
+          };
+          warnings.push(warn);
+        }
+
+        if (!setRequireStatementForAccountBalanceValve) {
+          warn = {
+            key: i + 1,
+            value: "Be aware of rerentrancy attack. Before withdraw or transfers, use a require statement to ensure smart contract has available fund. require(this.balance >= payment)"
+          };
+          warnings.push(warn);
+        }
+
+        if (!setAccountBalanceValve) {
+          warn = {
+            key: i + 1,
+            value: "Be aware of rerentrancy attack. Set post-withdrawal balance before sending."
+          };
+          warnings.push(warn);
+        }
+      }
+    }
+
+    transferCount = 0; //reset transfer count
+
+    setRequireStatementForIndividualBalanceNotZeroValve = false;
+    setRequireStatementForAccountBalanceValve = false;
+    setAccountBalanceValve = false;
+  }
+
+  ; //console.log("warning are " + warnings[1][0]);
+
+  return warnings;
+});
+
+/***/ }),
+
 /***/ "./pages/components/Header.js":
 /*!************************************!*\
   !*** ./pages/components/Header.js ***!
@@ -574,29 +871,63 @@ function (_React$Component) {
       });
     });
 
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "generateNumberedList", function () {
+      var x = lineNumbers();
+      var list = x.map(function (numbers) {
+        return react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Table"].Row, {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 35
+          },
+          __self: this
+        }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Table"].Cell, {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 36
+          },
+          __self: this
+        }, numbers));
+      }); //update loading bar
+
+      _this.setState({
+        lineNumbers: list
+      });
+    });
+
     _this.state = {
-      contractCode: ''
+      contractCode: '',
+      lineNumbers: ''
     };
     return _this;
   } //when smart contract code changes update the state of the parent
 
 
   Object(_babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(landingPageSection1, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.generateNumberedList();
+    } //generate rendered number list on side of page 
+
+  }, {
     key: "render",
     value: function render() {
+      var Input = semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Form"].Input,
+          Group = semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Form"].Group,
+          Field = semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Form"].Field;
       return react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Segment"], {
         style: {
-          height: '850px'
+          height: '850px',
+          overflow: 'scroll'
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 28
+          lineNumber: 56
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("h1", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 29
+          lineNumber: 57
         },
         __self: this
       }, " QUIKK Smart Contract Auditor"), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("p", {
@@ -605,15 +936,15 @@ function (_React$Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 30
+          lineNumber: 58
         },
         __self: this
-      }, " light, open-source smart contract auditor for ethereum"), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Form"], {
+      }, " minimal, fast, open-source smart contract auditor for ethereum"), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Form"], {
         error: !!this.props.errorMessage,
         success: !!this.props.successMessage,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 31
+          lineNumber: 59
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Progress"], {
@@ -621,16 +952,15 @@ function (_React$Component) {
         autoSuccess: true,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 32
+          lineNumber: 60
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Message"], {
         error: true,
-        header: "Error",
         content: this.props.errorMessage,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 33
+          lineNumber: 61
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Message"], {
@@ -639,23 +969,75 @@ function (_React$Component) {
         content: this.props.successMessage,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 34
+          lineNumber: 62
         },
         __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["TextArea"], {
+      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Grid"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 65
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Grid"].Row, {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 66
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Grid"].Column, {
+        width: 1,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 67
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Table"], {
+        color: 'grey',
+        celled: true,
+        compact: true,
+        basic: "very",
+        selectable: true,
+        style: {
+          marginTop: '11px'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 68
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Table"].Body, {
+        style: {
+          fontSize: '8px',
+          color: 'grey',
+          textAlign: 'center'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 70
+        },
+        __self: this
+      }, this.state.lineNumbers))), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Grid"].Column, {
+        width: 15,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 78
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["TextArea"], {
         value: this.state.contract,
         onChange: this.handleChangesToContract,
         style: {
-          maxHeight: '680px',
-          minHeight: '680px'
+          fontSize: '14px',
+          lineHeight: '27px',
+          height: '10000px'
         },
         placeholder: "Paste your smart contract code here...",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 38
+          lineNumber: 79
         },
         __self: this
-      })));
+      }))))));
     }
   }]);
 
@@ -663,6 +1045,19 @@ function (_React$Component) {
 }(react__WEBPACK_IMPORTED_MODULE_7___default.a.Component);
 
 /* harmony default export */ __webpack_exports__["default"] = (landingPageSection1);
+
+var lineNumbers = function lineNumbers() {
+  var array = [];
+  var i;
+
+  for (i = 1; i < 1001; i++) {
+    array.push(i); //[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
+  }
+
+  return array;
+}; // <Field style ={{maxHeight:'680px',minHeight:'680px'}} control={TextArea} label='Full Description' placeholder="Paste your smart contract code here..."
+//   value= {this.state.contract}  onChange={this.handleChangesToContract}  />
+// <TextArea value= {this.state.contract} onChange={this.handleChangesToContract} style ={{maxHeight:'680px',minHeight:'680px'}} placeholder="Paste your smart contract code here..."/>
 
 /***/ }),
 
@@ -732,11 +1127,12 @@ function (_React$Component) {
 
       return react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Segment"], {
         style: {
-          height: '850px'
+          height: '850px',
+          overflow: 'scroll'
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 17
+          lineNumber: 18
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Button"], {
@@ -748,19 +1144,19 @@ function (_React$Component) {
         loading: this.props.loading,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 18
+          lineNumber: 19
         },
         __self: this
       }, "Run Audit"), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 19
+          lineNumber: 20
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 20
+          lineNumber: 21
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Dropdown"], {
@@ -773,13 +1169,19 @@ function (_React$Component) {
         options: listOfCompilers,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 21
+          lineNumber: 22
         },
         __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Segment"], {
+      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("h4", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 29
+          lineNumber: 31
+        },
+        __self: this
+      }, "General Stats"), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Segment"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 32
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
@@ -788,37 +1190,16 @@ function (_React$Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 30
+          lineNumber: 33
         },
         __self: this
       }, " Time of Audit: "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 31
-        },
-        __self: this
-      }, " ", this.props.timeOfAudit, "  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 32
-        },
-        __self: this
-      }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
-        style: {
-          color: 'grey'
-        },
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 33
-        },
-        __self: this
-      }, " Vunerabilties Found:  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
-        __source: {
-          fileName: _jsxFileName,
           lineNumber: 34
         },
         __self: this
-      }, " ", this.props.vunerabiltiesFound, "  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
+      }, " ", this.props.timeOfAudit, "  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
         __source: {
           fileName: _jsxFileName,
           lineNumber: 35
@@ -839,7 +1220,7 @@ function (_React$Component) {
           lineNumber: 37
         },
         __self: this
-      }, " ", this.props.vunerabiltiesFound, "  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
+      }, " ", this.props.warningsList, "  "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("br", {
         __source: {
           fileName: _jsxFileName,
           lineNumber: 38
@@ -875,13 +1256,36 @@ function (_React$Component) {
           lineNumber: 42
         },
         __self: this
-      }, " Lines of Code: "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
+      }, " Approx Lines of Code: "), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("label", {
         __source: {
           fileName: _jsxFileName,
           lineNumber: 43
         },
         __self: this
-      }, " ", this.props.noOfLines, "  ")));
+      }, " ", this.props.noOfLines, "  ")), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("h4", {
+        style: {
+          color: '#FF9933'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 47
+        },
+        __self: this
+      }, "Warnings"), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Segment"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 48
+        },
+        __self: this
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["List"], {
+        divided: true,
+        relaxed: true,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 49
+        },
+        __self: this
+      }, this.props.renderedList)));
     }
   }]);
 
@@ -925,11 +1329,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! semantic-ui-react */ "semantic-ui-react");
 /* harmony import */ var semantic_ui_react__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! next/head */ "next/head");
-/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(next_head__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Header */ "./pages/components/Header.js");
-/* harmony import */ var _Sections_landingPageSection1__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Sections/landingPageSection1 */ "./pages/components/Sections/landingPageSection1.js");
-/* harmony import */ var _Sections_landingPageSection2__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Sections/landingPageSection2 */ "./pages/components/Sections/landingPageSection2.js");
+/* harmony import */ var _auditor_Auditor__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../auditor/Auditor */ "./pages/auditor/Auditor.js");
+/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! next/head */ "next/head");
+/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(next_head__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Header */ "./pages/components/Header.js");
+/* harmony import */ var _Sections_landingPageSection1__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Sections/landingPageSection1 */ "./pages/components/Sections/landingPageSection1.js");
+/* harmony import */ var _Sections_landingPageSection2__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Sections/landingPageSection2 */ "./pages/components/Sections/landingPageSection2.js");
 
 
 
@@ -938,6 +1343,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var _jsxFileName = "/Users/chris/Documents/BlockchainProjects/hackathon/auditorFrontEnd/pages/components/landingPage.js";
+
 
 
 
@@ -976,6 +1382,7 @@ function (_React$Component) {
       percent: '',
       errorMessage: '',
       successMessage: '',
+      renderedList: "",
       loading: false //get Time of Audit
 
     });
@@ -1005,55 +1412,135 @@ function (_React$Component) {
 
     Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "removeErrorMessage", function () {
       _this.setState({
+        contractCode: '',
+        warningsList: '',
+        creationCost: '',
+        executionCost: '',
+        gasEstimate: '',
+        timeOfAudit: '',
+        fileSize: '',
+        vunerabiltiesFound: '',
+        noOfLines: '',
+        percent: '',
         errorMessage: '',
         successMessage: '',
-        percent: '0'
+        renderedList: ""
       });
     });
 
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "renderWarningList", function (warnings) {
+      //update loading bar
+      _this.setState({
+        percent: '75',
+        warningsList: warnings.length
+      });
+
+      var list = warnings.map(function (warnings) {
+        return react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["List"].Item, {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 85
+          },
+          __self: this
+        }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["List"].Content, {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 86
+          },
+          __self: this
+        }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["List"].Header, {
+          as: "a",
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 87
+          },
+          __self: this
+        }, "line ", warnings.key), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["List"].Description, {
+          as: "a",
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 88
+          },
+          __self: this
+        }, warnings.value)));
+      }); //update loading bar
+
+      _this.setState({
+        percent: '100',
+        renderedList: list
+      });
+    });
+
+    Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "auditCode", function (dataArray) {
+      return Object(_auditor_Auditor__WEBPACK_IMPORTED_MODULE_9__["default"])(dataArray);
+    });
+
     Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "onSubmit", function () {
+      //check if compiler is selected by user else notify user
       if (_this.state.currentCompiler) {
         _this.setTimeOfAudit();
 
-        var self = Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this);
+        var self = Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this); //notify user of progress
+
 
         _this.setState({
           loading: true,
           errorMessage: '',
           successMessage: ''
-        });
+        }); //store contract code to state and prepare for compile and audit
 
-        var source = _this.state.contractCode;
 
-        var dataArray = _this.state.contractCode.split("\n"); //printlist of available compilers
+        var source = _this.state.contractCode; //split code into array based on each new line
+
+        var dataArray = source.split("\n");
+        var dataArrayLength = dataArray.length; //update loading bar
+
+        self.setState({
+          percent: '25'
+        }); //printlist of available compilers
         // BrowserSolc.getVersions(function(soljsonSources, soljsonReleases) {
         //   //console.log(soljsonSources);
         //   //console.log(soljsonReleases);
         // });
-        //Load a specific compiler version
-
+        //Load a chosen compiler version
 
         BrowserSolc.loadVersion.bind(Object(_babel_runtime_corejs2_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this))(_this.state.currentCompiler, function (compiler) {
           var optimize = 1;
-          var result = compiler.compile(source, optimize);
-          var totalGasCost = result.contracts[":Migrations"].gasEstimates.creation[0] + result.contracts[":Migrations"].gasEstimates.creation[1];
+          var result = compiler.compile(source, optimize); // console.log(result);
+          // console.log(result.sources[""]);
+          //console.log(result.contracts);
+          //check for errrors in compilation
 
-          if (result.errors) {
+          if (result.errors && !result.sources[""]) {
+            //save all warning and errors to state
             self.setState({
               errorMessage: result.errors[0]
             });
           } else {
-            self.setState({
-              noOfLines: dataArray.length,
-              creationCost: result.contracts[":Migrations"].gasEstimates.creation[0],
-              executionCost: result.contracts[":Migrations"].gasEstimates.creation[1],
-              gasEstimate: totalGasCost,
-              percent: 100,
-              successMessage: "Audit Complete!"
-            });
-          }
+            //check for warnings in compilation
+            if (result.errors) {
+              //save all warning and errors to state
+              self.setState({
+                errorMessage: result.errors[0]
+              });
+            } //compilation was succesful, auditing and updating general stats begins at this point 
+            //compute total gas cost which is the estimated creation cost plus the execution cost
+            //let totalGasCost = result.contracts[":Migrations"].gasEstimates.creation[0]+result.contracts[":Migrations"].gasEstimates.creation[1];
 
-          console.log(result.contracts[":Migrations"].gasEstimates.creation);
+
+            self.setState({
+              noOfLines: dataArrayLength,
+              // creationCost:result.contracts[":Migrations"].gasEstimates.creation[0],
+              // executionCost:result.contracts[":Migrations"].gasEstimates.creation[1],
+              // gasEstimate : totalGasCost,
+              percent: 50,
+              successMessage: "Audit Complete!"
+            }); //send contract code to auditor and await feed back of array of warnings
+
+            var warnings = self.auditCode(dataArray); //send array of warnings to renderList function to create organized JSX and update state
+
+            self.renderWarningList(warnings);
+          }
         });
       } else {
         _this.setState({
@@ -1078,35 +1565,35 @@ function (_React$Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 123
+          lineNumber: 215
         },
         __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_Header__WEBPACK_IMPORTED_MODULE_10__["default"], {
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_Header__WEBPACK_IMPORTED_MODULE_11__["default"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 124
+          lineNumber: 216
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Grid"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 125
+          lineNumber: 217
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Grid"].Row, {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 126
+          lineNumber: 218
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Grid"].Column, {
         width: 12,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 128
+          lineNumber: 220
         },
         __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_Sections_landingPageSection1__WEBPACK_IMPORTED_MODULE_11__["default"], {
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_Sections_landingPageSection1__WEBPACK_IMPORTED_MODULE_12__["default"], {
         removeErrorMessage: this.removeErrorMessage,
         loading: this.state.loading,
         successMessage: this.state.successMessage,
@@ -1115,28 +1602,29 @@ function (_React$Component) {
         storeContractCodeToState: this.storeContractCodeToState,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 129
+          lineNumber: 221
         },
         __self: this
       })), react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(semantic_ui_react__WEBPACK_IMPORTED_MODULE_8__["Grid"].Column, {
         width: 4,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 140
+          lineNumber: 233
         },
         __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_Sections_landingPageSection2__WEBPACK_IMPORTED_MODULE_12__["default"], {
+      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_Sections_landingPageSection2__WEBPACK_IMPORTED_MODULE_13__["default"], {
+        warningsList: this.state.warningsList,
+        renderedList: this.state.renderedList,
         gasEstimate: this.state.gasEstimate,
         removeErrorMessage: this.removeErrorMessage,
         loading: this.state.loading,
         noOfLines: this.state.noOfLines,
         timeOfAudit: this.state.timeOfAudit,
-        vunerabiltiesFound: this.state.vunerabiltiesFound,
         onSubmit: this.onSubmit,
         selectCompiler: this.selectCompiler,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 141
+          lineNumber: 234
         },
         __self: this
       })))));
