@@ -1,17 +1,19 @@
 import React from 'react';
-import { Container, Form, TextArea, Grid,List } from 'semantic-ui-react';
+import { Container, Form, TextArea,Input, Grid,List,Button,Modal } from 'semantic-ui-react';
 import Auditor from '../auditor/Auditor';
 import Head from 'next/head';
 import Header from './Header';
+import renderedModal from './renderedModal';
 import LandingPageSection1 from './Sections/landingPageSection1';
 import LandingPageSection2 from './Sections/landingPageSection2';
+import sampleContract from '../../sampleContract';
 
 
 class landingPage extends React.Component{
 
 	state = {
 		currentCompiler:'',
-		contractCode:'',
+		contractCode:sampleContract(),
 		creationCost:'',
 		executionCost:'',
 		gasEstimate:'',
@@ -23,7 +25,12 @@ class landingPage extends React.Component{
 		errorMessage:'',
 		successMessage:'',
 		renderedList:"",
-		loading:false
+		loading:false,
+		suggestions:[],
+		userName:'',
+		userContactInfo:'',
+		userSuggestion:'',
+		modalOpen:false
 	}
 
 	//get Time of Audit
@@ -48,14 +55,14 @@ class landingPage extends React.Component{
 
 	//receive contract code from child component-landingPageSection2 and store it to state
 	storeContractCodeToState=(contractCode)=>{
+		console.log(contractCode);
 		this.setState({
 			contractCode: contractCode
 		})
 	}
-
+//reset all neccesary variable when screen is clicked, drop down is selected and other similar events
 	removeErrorMessage=()=>{
 		this.setState({
-		contractCode:'',
 		warningsList:'',
 		creationCost:'',
 		executionCost:'',
@@ -208,18 +215,58 @@ class landingPage extends React.Component{
 		  	})  
 	}
 
+	saveUserSuggestionToState=()=>{
+		let userSuggestion ={}
+		userSuggestion.name = this.state.userName;
+		userSuggestion.contactInfo = this.state.userContactInfo;
+		userSuggestion.suggestion= this.state.userSuggestion;
+		let currentSuggestions = this.state.suggestions;
+		currentSuggestions.push(userSuggestion);
+
+		this.setState({
+			suggestions:currentSuggestions,
+			modalOpen:false
+		})
+
+console.log(this.state.suggestions);
+	}
+
+	userNameToState=(event)=>{
+		this.setState({
+			userName:event.target.value
+		})
+	}
+
+	userContactInfoToState=(event)=>{
+		this.setState({
+			userContactInfo:event.target.value
+		})
+	}
+
+	userSuggestionToState=(event)=>{
+		this.setState({
+			userSuggestion:event.target.value
+		})
+	}
+
+	handleOpen = () => this.setState({ modalOpen: true })
+
+    handleClose = () => this.setState({ modalOpen: false })
+
 
 	render(){
 
 		return(
-			<Container style={{width:'1230px'}}>
+			<div >
+
+			<Container style={{width:'1300px', marginTop:'10px'}}>
 			  <Header/>
 				<Grid>
 				    <Grid.Row>
 
-					      <Grid.Column width={12}>
+					      <Grid.Column width={11}>
 					      <LandingPageSection1
-					      
+					      contractCode={this.state.contractCode}
 					      removeErrorMessage = {this.removeErrorMessage}
 					      loading = {this.state.loading}
 					      successMessage = {this.state.successMessage}
@@ -244,10 +291,36 @@ class landingPage extends React.Component{
 					      />
 					      </Grid.Column>
 
+					      <Grid.Column width={1}>
+					              <Modal open={this.state.modalOpen} onClose={this.handleClose} trigger={<Button onClick={this.handleOpen} style={{marginTop:'775px'}} basic circular icon='comment alternate outline' size='huge'>Suggestion Box</Button>}>
+								    <Modal.Header style={{fontSize:'19px',color:'grey'}}>
+								    Thank you for taking the time to leave some feedback, I am a solo enthusiast who created this auditor for fun and to contribute to our beautiful ecosystem,
+								    I appreciate all suggestions, contributions and feedback to help improve this platform.
+								    </Modal.Header>
+								    <Modal.Content image>
+								      <Modal.Description>
+								        <Form>
+								        <Input onChange={this.userNameToState} value={this.state.userName} label='Name(optional)' placeholder='John Doe.....' />
+								        <Input onChange={this.userContactInfoToState} value={this.state.userContactInfo} label='Contact Information' placeholder='Email, Telegram,Git..etc' />
+								        <br/>
+								        <br/>
+								        <TextArea onChange={this.userSuggestionToState} value={this.state.userSuggestion} style ={{width:'850px',height:'100px'}} placeholder="Please enter your message here..."/>
+								      	<br/>
+								      	<br/>
+								      	<Button floated='right' secondary onClick={this.saveUserSuggestionToState}>Submit</Button>
+								        </Form>
+								        <h4 style={{color:'gray'}}>ETH Address: 0x001FabDCb503f618ceE9d79D949301EEBC170647</h4>
+								      </Modal.Description>
+								    </Modal.Content>
+								  </Modal>
+					      </Grid.Column>
+
 				    </Grid.Row>
 			    </Grid>
 
 		  </Container>
+		<h4 style={{marginLeft:'380px',color:'gray'}}>Suggestions and Contributions are welcome ETH Address: 0x001FabDCb503f618ceE9d79D949301EEBC170647</h4>
+		  </div>
 		  )
 
 	}

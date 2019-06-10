@@ -76,7 +76,7 @@ constructor(props) {
 			</Grid.Column>
 
 			<Grid.Column width={15}>
-			<TextArea value= {this.state.contract} onChange={this.handleChangesToContract} style ={{fontSize:'14px',lineHeight:'27px',height:'10000px'}} placeholder="Paste your smart contract code here..."/>
+			<TextArea value= {this.props.contractCode} onChange={this.handleChangesToContract} style ={{fontSize:'14px',lineHeight:'27px',height:'10000px',color:'#202020'}} placeholder="Paste your smart contract code here..."/>
 			 </Grid.Column>
 
 			 </Grid.Row>
