@@ -87,15 +87,39 @@ class landingPage extends React.Component{
 		  		warningsList:warnings.length
 		  	})
 
-	let list = warnings.map(warnings => {        
+	// Sort warnings by severity
+	const severityOrder = { 'CRITICAL': 1, 'HIGH': 2, 'MEDIUM': 3, 'LOW': 4 };
+	warnings.sort((a, b) => {
+		const severityA = severityOrder[a.severity] || 5;
+		const severityB = severityOrder[b.severity] || 5;
+		return severityA - severityB;
+	});
+
+	// Color coding for severity levels
+	const getSeverityColor = (severity) => {
+		switch(severity) {
+			case 'CRITICAL': return '#DC143C'; // Crimson
+			case 'HIGH': return '#FF6347'; // Tomato
+			case 'MEDIUM': return '#FFA500'; // Orange
+			case 'LOW': return '#FFD700'; // Gold
+			default: return '#808080'; // Gray
+		}
+	};
+
+	let list = warnings.map(warning => {
             return (
                 <List.Item>
                           <List.Content>
-                            <List.Header as='a'>line {warnings.key}</List.Header>
-                            <List.Description as='a'>{warnings.value}</List.Description>
+                            <List.Header as='a'>
+                              <span style={{color: getSeverityColor(warning.severity), fontWeight: 'bold'}}>
+                                [{warning.severity}]
+                              </span>
+                              {' '}line {warning.key}
+                            </List.Header>
+                            <List.Description as='a'>{warning.value}</List.Description>
                           </List.Content>
                     </List.Item>
-            );   
+            );
         });
 
 	     //update loading bar
@@ -108,7 +132,10 @@ class landingPage extends React.Component{
 
 
 	auditCode=(dataArray)=>{
-        return Auditor(dataArray);
+        // Extract version number from compiler string (e.g., "soljson-v0.8.26+commit..." -> "v0.8.26")
+        let compilerVersion = this.state.currentCompiler.match(/v\d+\.\d+\.\d+/);
+        compilerVersion = compilerVersion ? compilerVersion[0] : 'v0.4.24'; // default to v0.4.24 if not found
+        return Auditor(dataArray, compilerVersion);
 
     }
 
