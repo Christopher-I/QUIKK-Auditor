@@ -59,15 +59,14 @@ class landingPageSection2 extends React.Component{
 
 //list of all compilers arranged in object form according to the imported semantic UI requirements for the dropw down menu
 const listOfCompilers =  [
-{text:"soljson-v0.4.24+commit.e67f0147.js", value:"soljson-v0.4.24+commit.e67f0147.js"}, 
-{text:"soljson-v0.4.26+commit.4563c3fc.js", value:"soljson-v0.4.26+commit.4563c3fc.js"}
+{text:"soljson-v0.8.26+commit.8a97fa7a.js", value:"soljson-v0.8.26+commit.8a97fa7a.js"},
+{text:"soljson-v0.8.20+commit.a1b79de6.js", value:"soljson-v0.8.20+commit.a1b79de6.js"},
+{text:"soljson-v0.5.9+commit.e560f70d.js", value:"soljson-v0.5.9+commit.e560f70d.js"},
+{text:"soljson-v0.5.5+commit.47a71e8f.js", value:"soljson-v0.5.5+commit.47a71e8f.js"},
+{text:"soljson-v0.5.0+commit.1d4f565a.js", value:"soljson-v0.5.0+commit.1d4f565a.js"},
+{text:"soljson-v0.4.26+commit.4563c3fc.js", value:"soljson-v0.4.26+commit.4563c3fc.js"},
+{text:"soljson-v0.4.24+commit.e67f0147.js", value:"soljson-v0.4.24+commit.e67f0147.js"}
 ];
-
-// {text:"soljson-v0.5.0+commit.1d4f565a.js", value:"soljson-v0.5.0+commit.1d4f565a.js"},
-// {text:"soljson-v0.5.5+commit.47a71e8f.js", value:"soljson-v0.5.5+commit.47a71e8f.js"},
-// {text:"soljson-v0.5.9+commit.e560f70d.js", value:"soljson-v0.5.9+commit.e560f70d.js"},
-// text:"soljson-v0.3.1+commit.c492d9b.js", value:"soljson-v0.3.1+commit.c492d9b.js"},
-// {text:"soljson-v0.3.6+commit.3fc68da.js", value:"soljson-v0.3.6+commit.3fc68da.js"}
 
 export default landingPageSection2;
 
